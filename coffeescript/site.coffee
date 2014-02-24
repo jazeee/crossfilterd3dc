@@ -9,6 +9,7 @@ angularApplication.factory('DataService' , ($q) ->
 		deferred = $q.defer()
 		sourceFile = 'data/genome.gff'
 
+		# Use minor update to d3 to read a gff file which is a tab separated value file with no header
 		d3.gff(sourceFile, (rows) =>
 			rows.forEach( (row) ->
 				row.start = +row.start
