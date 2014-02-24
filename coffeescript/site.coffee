@@ -5,21 +5,9 @@ Developed by Jaz Singh 2014-02-15
 angularApplication = angular.module('crossFilterApp', ['ngRoute','ngAnimate'])
 
 angularApplication.factory('DataService' , ($q) ->
-	generateData = ->
-		crossfilter([
-			{ name: 'Rusty',  type: 'human', legs: 2 },
-			{ name: 'Alex',   type: 'human', legs: 2 },
-			{ name: 'Lassie', type: 'dog',   legs: 4 },
-			{ name: 'Spot',   type: 'dog',   legs: 4 },
-			{ name: 'Polly',  type: 'bird',  legs: 2 },
-			{ name: 'Fiona',  type: 'plant', legs: 0 }
-		])
-
 	generateGffData = () ->
 		deferred = $q.defer()
 		sourceFile = 'data/genome.gff'
-		barChart = dc.barChart('#dc-bar-chart')
-		pieChart = dc.pieChart('#dc-pie-chart')
 
 		d3.gff(sourceFile, (rows) =>
 			rows.forEach( (row) ->
@@ -51,6 +39,7 @@ angularApplication.factory('DataService' , ($q) ->
 			seqNamesDomain = _.map(seqNamesGroup.reduceCount().top(25), (seqNameCount)->
 				seqNameCount.key
 			)
+			barChart = dc.barChart('#dc-bar-chart')
 			barChart
 				.width(700)
 				.height(200)
@@ -63,6 +52,7 @@ angularApplication.factory('DataService' , ($q) ->
 #				.x(d3.scale.ordinal().domain(seqNamesDomain))
 				.x(d3.scale.linear().domain(startDomain))
 				.elasticY(true)
+			pieChart = dc.pieChart('#dc-pie-chart')
 			pieChart
 				.width(200)
 				.height(200)
@@ -75,7 +65,6 @@ angularApplication.factory('DataService' , ($q) ->
 		deferred.promise
 
 	return {
-		testData: generateData()
 		generateGffData: generateGffData
 		resetAllFilters: ->
 			dc.filterAll()
@@ -84,7 +73,6 @@ angularApplication.factory('DataService' , ($q) ->
 )
 
 angularApplication.controller('HomeController' , ($scope, $location, DataService) ->
-	$scope.result = DataService.testData.groupAll().reduceCount().value()
 	DataService.generateGffData().then((gffData) ->
 		$scope.gffData = gffData
 		$scope.gffResults = gffData.groupAll().reduceCount().value()
