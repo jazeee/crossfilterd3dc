@@ -24,6 +24,7 @@ angularApplication.factory('DataService' , ($q) ->
 			console.log(startExtent)
 
 			start = gffData.dimension( (data) ->
+				# Bin the data into 100 bins
 				factor = 100 / startExtent
 				Math.round(data.start * factor) / factor
 			)
